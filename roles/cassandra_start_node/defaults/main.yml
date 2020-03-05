@@ -1,0 +1,6 @@
+---
+# defaults file for /etc/ansible/roles/cassandra_start_node
+SYSTEM_KEYSPACSE_REPLICA: 3
+DC_NAME: dc1
+KEYSPACE_NAME: keyspace_test
+KEYSPACE_REPLICA: 2
