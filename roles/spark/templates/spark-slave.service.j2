@@ -1,0 +1,19 @@
+[Unit]
+Description=The Spark-Slave
+After=network.target
+
+[Service]
+Type=forking
+User=root
+Group=root
+KillMode=process
+ExecStart=/bin/bash /opt/{{SPARK_DIR_NAME}}/sbin/start-slave.sh spark://{{ groups['spark_master'][0] }}:{{ SPARK_MASTER_PORT }}
+ExecStop=/bin/bash /opt/{{SPARK_DIR_NAME}}/sbin/stop-slave.sh
+LimitNOFILE=100000
+LimitNPROC=100000
+LimitMEMLOCK=infinity
+TimeoutStartSec=5
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

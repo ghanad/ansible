@@ -1,0 +1,5 @@
+---
+# tasks file for /etc/ansible/roles/spark
+- include: copy_and_unarchive.yml
+- include: spark_service.yml
+- include: edit_host_on_master.yml

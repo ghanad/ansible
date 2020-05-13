@@ -1,0 +1,32 @@
+---
+# find spark file name in local machine
+- name: find spark on /opt/
+  local_action:
+    module: find
+    paths: /opt/
+    patterns: 'spark-*.tar.gz'
+  register: SPARK_FILE_PATH
+
+- name: set fact spark source file
+  set_fact:
+    SPARK_FILE_PATH: "{{SPARK_FILE_PATH.files.0.path}}"
+
+
+# copy SPARK
+- name: copy SPARK to remote host 
+  copy: 
+    src: "{{ SPARK_FILE_PATH }}"
+    dest: /opt/
+  
+# unarchive SPARK file
+- name:  unarchive SPARK in host
+  unarchive: 
+    src: "{{ SPARK_FILE_PATH }}" 
+    dest: /opt/
+    remote_src: yes
+    list_files: yes
+  register: SPARK_DIR_NAME_TMP
+
+- name: set fact for SPARK home
+  set_fact:
+    SPARK_DIR_NAME: "{{ SPARK_DIR_NAME_TMP.files[0] | replace('/', '') }}"
