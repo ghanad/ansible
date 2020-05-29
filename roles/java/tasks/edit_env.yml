@@ -3,7 +3,7 @@
 - name: edit /etc/environment
   lineinfile:
     dest: /etc/environment
-    regexp: "^(JAVA_HOME=)" 
+    regexp: "^(JAVA_HOME=)"
     state: present
     line: "JAVA_HOME={{ JAVA_HOME }}"
 
@@ -11,7 +11,7 @@
 - name: add {{ JAVA_HOME }} to /etc/environmet
   replace:
     path: /etc/environment
-    regexp: 'PATH=(["])((?!.*{{JAVA_HOME}}).*)(["])'
+    regexp: 'PATH=(["])((?!.*{{ JAVA_HOME }}).*)(["])'
     replace: 'PATH=\1\2:{{ (JAVA_HOME + "/bin") | replace("//","/") }}:\3'
 
 
@@ -20,10 +20,3 @@
     path: /etc/environment
     regexp: '::'
     replace: ":"
-
-
-- name: source /etc/environmet
-  shell: source /etc/environment
-  args:
-    executable: /bin/bash
-  become: true
