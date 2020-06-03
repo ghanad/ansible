@@ -39,6 +39,7 @@ allocate_tokens_for_keyspace: {{ KEYSPACE_NAME }}
 # vnodes (num_tokens > 1, above) -- in which case you should provide a 
 # comma-separated list -- it's primarily used when adding nodes to legacy clusters 
 # that do not have vnodes enabled.
+{% if groups['cluster'] %}
 {% if inventory_hostname == groups['cluster'][0] %}
 {% set token_list = [] %}
 {% for n in range(TOKEN_NUMBER)-%}
@@ -48,7 +49,15 @@ initial_token: {{ token_list|join(',')}}
 {% else %}
 # initial_token:
 {% endif %}
+{% endif %}
 
+{% if not groups['cluster'] %}
+{% set token_list = [] %}
+{% for n in range(TOKEN_NUMBER)-%}
+{{ token_list.append((((((2**64)/TOKEN_NUMBER)*n)-2**63)| int)|string) }}
+{%- endfor%}
+initial_token: {{ token_list|join(',')}}
+{% endif %}
 
 # See http://wiki.apache.org/cassandra/HintedHandoff
 # May either be "true" or "false" to enable globally
